@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
+
 load_dotenv()
 
 
@@ -14,3 +15,19 @@ Born into the wealthy Musk family in Pretoria, South Africa, Musk emigrated in 1
 In 2002, Musk founded and became CEO and chief engineer of SpaceX, a space technology company. Musk joined Tesla as an angel investor in 2004 and became its CEO and product architect in 2008. In 2015, Musk co-founded OpenAI to advance artificial intelligence (AI) research, but later left; his growing discontent with the organization's direction and leadership in the AI boom in the 2020s led him to establish xAI, which became a subsidiary of SpaceX in 2026. In 2022, he acquired Twitter, a social networking service, and made significant changes, including rebranding it as X in 2023. His other businesses include Neuralink, a neurotechnology company that he co-founded in 2016, and the Boring Company, a tunneling company that he founded in 2017. In November 2025, Tesla approved a pay package worth $1 trillion for Musk, which he is to receive over 10 years if certain milestones are met, such as achieving a market capitalization of $8.5 trillion. Musk became the first US-dollar trillionaire upon the initial public offering of SpaceX in June 2026, though a SpaceX stock collapse brought him under the threshold by the next month.
 """
 
+summary_template = """
+given the information of {information} about a person I want to create a concise summary highlighting the key points of their life and achievements.
+The summary should be clear, informative, and easy to understand.
+"""
+
+summary_template_prompt = PromptTemplate(
+    input_variables=["information"],
+    template=summary_template
+)
+llm = ChatOpenAI(
+    temperature=0,
+    model="gpt-5-nano"
+)
+chain = summary_template_prompt | llm
+response = chain.invoke(input={"information": information})
+print(response.pretty_repr())
